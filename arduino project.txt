@@ -1,0 +1,176 @@
+#include <Servo.h>
+
+int sensorValue=0;// VARIABLE TO STORE SENSOR READING
+int ledPin=10;
+int ledPin1 = 11;      // LED connected to digital pin 9
+int analogPin = 3;   // potentiometer connected to analog pin 3
+int val = 0;         // variable to store the read value
+const int analogInPin1 = A0;
+int sensorValue1 = 0;
+int ledPin2 = 12 ;
+int motorPin1 = 6;
+int motorPin2 = 7;
+int motorPin3= 8;
+int motorPin4= 9;
+int relayPin=3;
+Servo myservo;  // create servo object to control a servo
+int pos=0;    // variable to store the servo position
+Servo servo1;
+int pos1=0;
+
+
+void setup()
+{   pinMode(ledPin,OUTPUT);
+    Serial.begin(9600);
+    pinMode(ledPin, OUTPUT);   // sets the pin as output
+    pinMode(ledPin, OUTPUT);
+    pinMode(motorPin1, OUTPUT);
+    pinMode(motorPin2, OUTPUT);
+    pinMode(motorPin3, OUTPUT);
+    pinMode(motorPin4,OUTPUT);
+    pinMode(relayPin, OUTPUT);
+    myservo.attach(5);  // attaches the servo on pin 9 to the servo object
+    servo1.attach(10);
+    
+}
+
+void loop() {
+  // read the input on analog pin 0:
+  sensorValue = analogRead(A0);
+  // print out the value you read:
+  Serial.println(sensorValue);
+  delay(100);// delay in between reads for stability
+
+if(sensorValue>100)
+ { Serial.println("Alert!! FIRE FIRE!!!!!!");
+    digitalWrite(ledPin,HIGH);
+ }
+else
+ {digitalWrite(ledPin,LOW);}
+
+ val = analogRead(analogPin);   // read the input pin
+
+ analogWrite(ledPin, val / 4);  // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+ 
+ if(sensorValue1> 90)
+  {
+  Serial.println("FIRE");    
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+  digitalWrite(ledPin,LOW);
+  delay(500);
+  }
+ 
+    if (Serial.available() > 0) {
+    char s = Serial.read();
+    Serial.println(s);
+    if (s == 'f'){
+    Serial.println("FORWARD");
+    digitalWrite(motorPin1, HIGH);
+    digitalWrite(motorPin2, LOW);
+    digitalWrite(motorPin3, HIGH);
+    digitalWrite(motorPin4, LOW);
+   
+    delay(800); 
+    digitalWrite(motorPin1, LOW);
+    digitalWrite(motorPin2, LOW);
+    digitalWrite(motorPin3, LOW);
+    digitalWrite(motorPin4, LOW);
+    }
+    else if (s == 'b') {
+    Serial.print("BACKWARD");
+     digitalWrite(motorPin1, LOW);
+    digitalWrite(motorPin2, HIGH);
+    digitalWrite(motorPin3, LOW);
+    digitalWrite(motorPin4, HIGH);
+   
+    delay(800); 
+    digitalWrite(motorPin1, LOW);
+    digitalWrite(motorPin2, LOW);
+    digitalWrite(motorPin3, LOW);
+    digitalWrite(motorPin4, LOW);
+   
+    }
+    else if (s == 'r') {
+    Serial.print("RIGHT");
+    digitalWrite(motorPin1, LOW);
+    digitalWrite(motorPin2, HIGH);
+    digitalWrite(motorPin3, HIGH);
+    digitalWrite(motorPin4, LOW);
+    delay(800); 
+    digitalWrite(motorPin1, LOW);
+    digitalWrite(motorPin2, LOW);
+    digitalWrite(motorPin3, LOW);
+    digitalWrite(motorPin4, LOW);
+   
+    }
+    else if (s == 'l') {
+    Serial.print("LEFT");
+    digitalWrite(motorPin1, HIGH);
+    digitalWrite(motorPin2, LOW);
+    digitalWrite(motorPin3, LOW);
+    digitalWrite(motorPin4, HIGH);
+    delay(800); 
+    digitalWrite(motorPin1, LOW);
+    digitalWrite(motorPin2, LOW);
+    digitalWrite(motorPin3, LOW);
+    digitalWrite(motorPin4, LOW);
+   
+    }
+   
+ 
+    }
+
+  sensorValue1 = analogRead(analogInPin1);
+  Serial.print("lm35=");
+  Serial.println(sensorValue1);
+  delay(500);
+
+    if (Serial.available() > 0) {
+    //digitalWrite(relayPin, HIGH);  
+    char s = Serial.read();
+    Serial.println(s);
+    if (s == 'g')
+    {digitalWrite(relayPin, HIGH);
+    Serial.println("ON");
+   
+   
+     }
+    if (s == 's')
+    {Serial.println("OFF");
+    digitalWrite(relayPin, LOW);
+    }
+    
+    }
+    for (pos = 60; pos <= 120; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(10);  // waits 15ms for the servo to reach the position
+    }
+    for (pos = 120; pos >= 60; pos -= 1) { // goes from 180 degrees to 0 degrees
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(10);                       // waits 15ms for the servo to reach the position
+   }
+
+   if (Serial.available() > 0) {
+   char s = Serial.read();
+   Serial.println(s);
+   if(s == 'a')
+   {
+   pos1=pos1+10;
+   servo1.write(pos1);
+   delay(400);
+   //if (pos == 180) {pos=0;}
+   }
+   else if(s == 'c') 
+   {
+   pos1=pos1-10; 
+   servo1.write(pos1);
+   delay(400);
+    
+   }
+
+   }
+
+  
+}
