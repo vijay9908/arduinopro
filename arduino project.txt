@@ -32,7 +32,7 @@ void setup()
     myservo.attach(5);  // attaches the servo on pin 9 to the servo object
     servo1.attach(10);
     
-}
+} //hack_comment
 
 void loop() {
   // read the input on analog pin 0:
